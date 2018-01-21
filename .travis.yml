@@ -10,10 +10,11 @@ branches:
     - trying
     - master
 
-addons:
-  apt:
-    packages:
-    - libgtk-3-dev
+os: linux
+before_install:
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      sudo apt-get install libgtk-3-dev;
+    fi
 
 script:
 - cargo test --all
