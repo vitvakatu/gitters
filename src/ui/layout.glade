@@ -267,10 +267,12 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkTextView" id="message_text">
+                      <object class="GtkEntry" id="message_text">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="wrap_mode">word</property>
+                        <property name="primary_icon_stock">gtk-spell-check</property>
+                        <property name="placeholder_text" translatable="yes">Write a message ...</property>
+                        <property name="show_emoji_icon">True</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -280,14 +282,12 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="send_msg_button">
-                        <property name="label" translatable="yes">Send</property>
+                        <property name="label">gtk-apply</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="margin_left">5</property>
-                        <property name="margin_right">5</property>
-                        <property name="margin_top">20</property>
-                        <property name="margin_bottom">20</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

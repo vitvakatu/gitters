@@ -1,5 +1,5 @@
 use gitter::{self, Gitter};
-use gtk::{self, WidgetExt, LabelExt, ContainerExt, TextViewExt, TextBufferExt};
+use gtk::{self, ContainerExt, EntryExt, LabelExt, WidgetExt};
 use relm::Update;
 use relm::{Relm, Widget};
 
@@ -65,11 +65,8 @@ impl Win {
         if let Ok(messages) = self.api.get_messages(&room_id, Some(pagination)) {
             let message_ids: Vec<_> = messages.iter().map(|m| m.id.clone()).collect();
             let user_id = self.api.get_user().unwrap().id;
-            let _ = self.api.mark_messages_as_read(
-                &user_id,
-                &room_id,
-                &message_ids,
-            );
+            let _ = self.api
+                .mark_messages_as_read(&user_id, &room_id, &message_ids);
             for message in messages {
                 let text: &str = &format!("{}: {}", message.from.username, message.text);
                 let label = Self::create_msg_label(text);
@@ -97,10 +94,7 @@ impl Update for Win {
                 self.api
                     .send_message(&self.model.current_room, msg)
                     .unwrap();
-                self.model.message_text.get_buffer().map(|b| {
-                    let (mut start, mut end) = b.get_bounds();
-                    b.delete(&mut start, &mut end);
-                });
+                self.model.message_text.get_text().unwrap_or_default();
             }
             Msg::Update(()) => {
                 self.update_impl();
