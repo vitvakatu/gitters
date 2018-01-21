@@ -5,7 +5,7 @@ authors = ["Ilya Bogdanov <fumlead@gmail.com>"]
 
 [dependencies]
 gitter = "0.2.0"
-gtk = { version = "0.3.0", features = ["v3_10"] }
+gtk = { version = "0.3.0", features = ["v3_22"] }
 relm = "0.11.0"
 futures-glib = "0.3.2"
 relm-derive = "0.11.0"
