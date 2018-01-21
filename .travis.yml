@@ -10,5 +10,10 @@ branches:
     - trying
     - master
 
+addons:
+  apt:
+    packages:
+    - libgtk-3-dev
+
 script:
 - cargo test --all
