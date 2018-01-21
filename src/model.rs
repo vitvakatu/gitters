@@ -17,7 +17,7 @@ pub struct Model {
 impl Model {
     pub fn new(relm: &Relm<Win>) -> Self {
         let builder = gtk::Builder::new();
-        builder.add_from_file("layout.glade").unwrap();
+        builder.add_from_file("src/ui/layout.glade").unwrap();
         let window: gtk::ApplicationWindow = builder.get_object("window").unwrap();
         connect!(relm,
             window,
