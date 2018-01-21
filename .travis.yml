@@ -1,0 +1,14 @@
+language: rust
+rust:
+  - nightly
+  - stable
+cache: cargo
+
+branches:
+  only:
+    - staging
+    - trying
+    - master
+
+script:
+- cargo test --all
