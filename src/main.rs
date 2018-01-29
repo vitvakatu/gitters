@@ -1,4 +1,3 @@
-#![feature(use_nested_groups)]
 extern crate futures_glib;
 extern crate gitter;
 extern crate gtk;
