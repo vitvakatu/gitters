@@ -1,56 +1,76 @@
-use gtk::{self, WidgetExt, ButtonExt, ListBoxExt, TextViewExt, TextBufferExt};
+use gtk::{self, *};
 use relm::Relm;
 use win::Win;
 use msg::Msg;
+use msg::AppState;
 
 use std::collections::HashMap;
 
-pub struct Model {
+pub struct ModelExt {
+    pub builder: gtk::Builder,
+    pub gtk_app: gtk::ApplicationWindow,
+    // pub username: String,
     pub current_room: String,
     pub rooms: HashMap<gtk::ListBoxRow, String>,
     pub room_list_box: gtk::ListBox,
-    pub message_text: gtk::TextView,
-    pub messages_box: gtk::Box,
-    pub builder: gtk::Builder,
+    pub message_text: gtk::Entry,
+    pub messages_box: gtk::ListBox,
 }
 
-impl Model {
+impl ModelExt {
     pub fn new(relm: &Relm<Win>) -> Self {
-        let builder = gtk::Builder::new();
-        builder.add_from_file("src/ui/layout.glade").unwrap();
-        let window: gtk::ApplicationWindow = builder.get_object("window").unwrap();
-        connect!(relm,
-            window,
+        let builder = gtk::Builder::new_from_file("src/ui/app_window.glade");
+        let gtk_app: gtk::ApplicationWindow = builder.get_object("app_window").unwrap();
+        connect!(
+            relm,
+            gtk_app,
             connect_delete_event(_, _),
-            return (Some(Msg::Quit), gtk::Inhibit(false)));
+            return (Some(Msg::Quit), gtk::Inhibit(false))
+        );
 
         let room_list_box: gtk::ListBox = builder.get_object("room_list_box").unwrap();
         let list_box = room_list_box.clone();
-        connect!(relm,
+        connect!(
+            relm,
             room_list_box,
             connect_row_selected(_, _),
-            Msg::SelectRoom(list_box.get_selected_row()));
+            Msg::SelectRoom(list_box.get_selected_row())
+        );
 
-        let message_text: gtk::TextView = builder.get_object("message_text").unwrap();
-        let send_button: gtk::Button = builder.get_object("send_msg_button").unwrap();
+        let message_text: gtk::Entry = builder.get_object("msg_entry").unwrap();
         let message_text_ = message_text.clone();
-        connect!(relm,
-            send_button,
-            connect_clicked(_),
-            Msg::Send(message_text_.get_buffer().map(|b| {
-                let (start, end) = b.get_bounds();
-                b.get_text(&start, &end, false).unwrap_or(String::new())
-            }).unwrap_or(String::new())));
-
-        let messages_box: gtk::Box = builder.get_object("messages_box").unwrap();
-
-        Model {
-            messages_box,
+        connect!(
+            relm,
             message_text,
+            connect_activate(_),
+            Msg::Send(message_text_.get_text().unwrap_or_default())
+        );
+
+        let messages_box: gtk::ListBox = builder.get_object("message_list").unwrap();
+
+        ModelExt {
+            message_text,
+            messages_box,
             room_list_box,
+            builder,
+            gtk_app,
             current_room: String::new(),
             rooms: HashMap::new(),
-            builder,
         }
+    }
+
+    #[allow(dead_code)]
+    pub fn set_state(state: AppState) {
+        let widget_title = match state {
+            AppState::Chat => "chat",
+            AppState::Directory => "directory",
+            AppState::Loading => "loading",
+        };
+
+        let builder = gtk::Builder::new();
+        builder
+            .get_object::<gtk::Stack>("main_content_stack")
+            .expect("Can't find main_content_stack")
+            .set_visible_child_name(widget_title);
     }
 }

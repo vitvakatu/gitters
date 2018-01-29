@@ -1,5 +1,5 @@
 use gitter::{self, Gitter};
-use gtk::{self, WidgetExt, LabelExt, ContainerExt, TextViewExt, TextBufferExt};
+use gtk::{self, *};
 use relm::Update;
 use relm::{Relm, Widget};
 
@@ -8,10 +8,10 @@ use std::env;
 
 use msg::Msg;
 use futures_glib;
-use model::Model;
+use model::ModelExt;
 
 pub struct Win {
-    model: Model,
+    model: ModelExt,
     window: gtk::ApplicationWindow,
     api: Gitter<'static>,
 }
@@ -65,11 +65,8 @@ impl Win {
         if let Ok(messages) = self.api.get_messages(&room_id, Some(pagination)) {
             let message_ids: Vec<_> = messages.iter().map(|m| m.id.clone()).collect();
             let user_id = self.api.get_user().unwrap().id;
-            let _ = self.api.mark_messages_as_read(
-                &user_id,
-                &room_id,
-                &message_ids,
-            );
+            let _ = self.api
+                .mark_messages_as_read(&user_id, &room_id, &message_ids);
             for message in messages {
                 let text: &str = &format!("{}: {}", message.from.username, message.text);
                 let label = Self::create_msg_label(text);
@@ -83,12 +80,12 @@ impl Win {
 }
 
 impl Update for Win {
-    type Model = Model;
+    type Model = ModelExt;
     type ModelParam = ();
     type Msg = Msg;
 
     fn model(relm: &Relm<Self>, _: Self::ModelParam) -> Self::Model {
-        Model::new(relm)
+        ModelExt::new(relm)
     }
 
     fn update(&mut self, event: Self::Msg) {
@@ -97,10 +94,7 @@ impl Update for Win {
                 self.api
                     .send_message(&self.model.current_room, msg)
                     .unwrap();
-                self.model.message_text.get_buffer().map(|b| {
-                    let (mut start, mut end) = b.get_bounds();
-                    b.delete(&mut start, &mut end);
-                });
+                self.model.message_text.get_text().unwrap_or_default();
             }
             Msg::Update(()) => {
                 self.update_impl();
@@ -137,11 +131,10 @@ impl Widget for Win {
     }
 
     fn view(_: &Relm<Self>, model: Self::Model) -> Self {
-        let key = env::var("GITTER_API_TOKEN").expect("Needs GITTER_API_TOKEN env var");
-        let api = Gitter::new(key).unwrap();
+        let token = env::var("GITTER_API_TOKEN").expect("Needs GITTER_API_TOKEN env var");
+        let api = Gitter::new(token).unwrap();
 
-        let window: gtk::ApplicationWindow = model.builder.get_object("window").unwrap();
-
+        let window = model.gtk_app.clone();
         window.show_all();
 
         Win { api, model, window }
