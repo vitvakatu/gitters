@@ -1,5 +1,6 @@
 use gitter::{self, Gitter};
-use gtk::{self, *};
+use gtk;
+use gtk::{ContainerExt, EntryExt, LabelExt, WidgetExt};
 use relm::Update;
 use relm::{Relm, Widget};
 
@@ -8,10 +9,10 @@ use std::env;
 
 use msg::Msg;
 use futures_glib;
-use model::ModelExt;
+use model::Model;
 
 pub struct Win {
-    model: ModelExt,
+    model: Model,
     window: gtk::ApplicationWindow,
     api: Gitter<'static>,
 }
@@ -80,12 +81,12 @@ impl Win {
 }
 
 impl Update for Win {
-    type Model = ModelExt;
+    type Model = Model;
     type ModelParam = ();
     type Msg = Msg;
 
     fn model(relm: &Relm<Self>, _: Self::ModelParam) -> Self::Model {
-        ModelExt::new(relm)
+        Model::new(relm)
     }
 
     fn update(&mut self, event: Self::Msg) {

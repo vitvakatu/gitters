@@ -1,4 +1,5 @@
-use gtk::{self, *};
+use gtk;
+use gtk::{EntryExt, ListBoxExt, StackExt, WidgetExt};
 use relm::Relm;
 use win::Win;
 use msg::Msg;
@@ -6,7 +7,7 @@ use msg::AppState;
 
 use std::collections::HashMap;
 
-pub struct ModelExt {
+pub struct Model {
     pub builder: gtk::Builder,
     pub gtk_app: gtk::ApplicationWindow,
     // pub username: String,
@@ -17,7 +18,7 @@ pub struct ModelExt {
     pub messages_box: gtk::ListBox,
 }
 
-impl ModelExt {
+impl Model {
     pub fn new(relm: &Relm<Win>) -> Self {
         let builder = gtk::Builder::new_from_file("src/ui/app_window.glade");
         let gtk_app: gtk::ApplicationWindow = builder.get_object("app_window").unwrap();
@@ -48,7 +49,7 @@ impl ModelExt {
 
         let messages_box: gtk::ListBox = builder.get_object("message_list").unwrap();
 
-        ModelExt {
+        Model {
             message_text,
             messages_box,
             room_list_box,
