@@ -1,16 +1,15 @@
 use gtk;
-use gtk::{EntryExt, ListBoxExt, StackExt, WidgetExt};
+use gtk::{EntryExt, ListBoxExt, WidgetExt};
 use relm::Relm;
-use win::Win;
-use msg::Msg;
-use msg::AppState;
+use core::win::Win;
+use core::msg::Msg;
 
 use std::collections::HashMap;
 
+#[derive(Clone)]
 pub struct Model {
     pub builder: gtk::Builder,
     pub gtk_app: gtk::ApplicationWindow,
-    // pub username: String,
     pub current_room: String,
     pub rooms: HashMap<gtk::ListBoxRow, String>,
     pub room_list_box: gtk::ListBox,
@@ -20,7 +19,7 @@ pub struct Model {
 
 impl Model {
     pub fn new(relm: &Relm<Win>) -> Self {
-        let builder = gtk::Builder::new_from_file("src/ui/app_window.glade");
+        let builder = gtk::Builder::new_from_file("src/resources/interface.glade");
         let gtk_app: gtk::ApplicationWindow = builder.get_object("app_window").unwrap();
         connect!(
             relm,
@@ -58,20 +57,5 @@ impl Model {
             current_room: String::new(),
             rooms: HashMap::new(),
         }
-    }
-
-    #[allow(dead_code)]
-    pub fn set_state(state: AppState) {
-        let widget_title = match state {
-            AppState::Chat => "chat",
-            AppState::Directory => "directory",
-            AppState::Loading => "loading",
-        };
-
-        let builder = gtk::Builder::new();
-        builder
-            .get_object::<gtk::Stack>("main_content_stack")
-            .expect("Can't find main_content_stack")
-            .set_visible_child_name(widget_title);
     }
 }

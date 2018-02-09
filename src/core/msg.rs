@@ -1,6 +1,6 @@
+#![allow(dead_code)]
 use gtk;
 
-#[allow(dead_code)]
 #[derive(Msg)]
 pub enum Msg {
     Send(String),
@@ -9,18 +9,13 @@ pub enum Msg {
     Quit,
 }
 
-#[allow(dead_code)]
-#[derive(Msg, Clone)]
-pub enum RoomState {
-    Room,
-    NoRoom,
-    Loading,
-}
-
-#[allow(dead_code)]
-#[derive(Msg, Clone)]
+#[derive(Msg)]
+#[repr(u8)]
 pub enum AppState {
     Chat,
     Directory,
     Loading,
+    Room,
+    NoRoom,
+    Connect,
 }

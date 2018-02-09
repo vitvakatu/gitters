@@ -7,9 +7,9 @@ use relm::{Relm, Widget};
 use std::time::Duration;
 use std::env;
 
-use msg::Msg;
+use core::msg::Msg;
+use core::model::Model;
 use futures_glib;
-use model::Model;
 
 pub struct Win {
     model: Model,
@@ -102,7 +102,7 @@ impl Update for Win {
             }
             Msg::SelectRoom(Some(ref row)) => {
                 let needs_update = {
-                    let room_id = self.model.rooms.get(row).unwrap();
+                    let room_id = &self.model.rooms[row];
                     let needs_update = self.model.current_room == room_id.as_str();
                     self.model.current_room = room_id.clone();
                     needs_update
@@ -118,6 +118,7 @@ impl Update for Win {
         }
     }
 
+    // TODO: Rewrite.
     fn subscriptions(&mut self, relm: &Relm<Self>) {
         let update_stream = futures_glib::Interval::new(Duration::from_secs(3));
         relm.connect_exec_ignore_err(update_stream, Msg::Update);
