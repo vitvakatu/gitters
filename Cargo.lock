@@ -273,7 +273,7 @@ dependencies = [
 
 [[package]]
 name = "gitter"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -289,7 +289,7 @@ name = "gitters"
 version = "0.1.0"
 dependencies = [
  "futures-glib 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "gitter 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gitter 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gtk 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "relm 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "relm-derive 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1162,7 +1162,7 @@ dependencies = [
 "checksum gdk-sys 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d4ee916f5f25c5f4b21bd9dcb12a216ae697406940ff9476358c308a8ececada"
 "checksum gio 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "84ba5a2beb559059a0c9c2bd3681743cdede8d9a36c775840bca800333b22867"
 "checksum gio-sys 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "a303bbf7a5e75ab3b627117ff10e495d1b9e97e1d68966285ac2b1f6270091bc"
-"checksum gitter 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "40d37815d77031af890a5befeaa52b2d1aded5e8bef95713c4383a5b7a3a47d0"
+"checksum gitter 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3df19cfcb1d153dd0db3196b3715504c5298d7b0c9220a500a85e902feb58f55"
 "checksum glib 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "b9b0452824cc63066940f01adc721804919f0b76cdba3cfab977b00b87f16d4a"
 "checksum glib-sys 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d9693049613ff52b93013cc3d2590366d8e530366d288438724b73f6c7dc4be8"
 "checksum gobject-sys 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "60d507c87a71b1143c66ed21a969be9b99a76df234b342d733e787e6c9c7d7c2"
