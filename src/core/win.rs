@@ -1,14 +1,15 @@
 use gitter::{self, Gitter};
-use gtk::{self, WidgetExt, LabelExt, ContainerExt, TextViewExt, TextBufferExt};
+use gtk;
+use gtk::{ContainerExt, EntryExt, LabelExt, WidgetExt};
 use relm::Update;
 use relm::{Relm, Widget};
 
 use std::time::Duration;
 use std::env;
 
-use msg::Msg;
+use core::msg::Msg;
+use core::model::Model;
 use futures_glib;
-use model::Model;
 
 pub struct Win {
     model: Model,
@@ -65,11 +66,8 @@ impl Win {
         if let Ok(messages) = self.api.get_messages(&room_id, Some(pagination)) {
             let message_ids: Vec<_> = messages.iter().map(|m| m.id.clone()).collect();
             let user_id = self.api.get_user().unwrap().id;
-            let _ = self.api.mark_messages_as_read(
-                &user_id,
-                &room_id,
-                &message_ids,
-            );
+            let _ = self.api
+                .mark_messages_as_read(&user_id, &room_id, &message_ids);
             for message in messages {
                 let text: &str = &format!("{}: {}", message.from.username, message.text);
                 let label = Self::create_msg_label(text);
@@ -97,17 +95,14 @@ impl Update for Win {
                 self.api
                     .send_message(&self.model.current_room, msg)
                     .unwrap();
-                self.model.message_text.get_buffer().map(|b| {
-                    let (mut start, mut end) = b.get_bounds();
-                    b.delete(&mut start, &mut end);
-                });
+                self.model.message_text.get_text().unwrap_or_default();
             }
             Msg::Update(()) => {
                 self.update_impl();
             }
             Msg::SelectRoom(Some(ref row)) => {
                 let needs_update = {
-                    let room_id = self.model.rooms.get(row).unwrap();
+                    let room_id = &self.model.rooms[row];
                     let needs_update = self.model.current_room == room_id.as_str();
                     self.model.current_room = room_id.clone();
                     needs_update
@@ -123,6 +118,7 @@ impl Update for Win {
         }
     }
 
+    // TODO: Rewrite.
     fn subscriptions(&mut self, relm: &Relm<Self>) {
         let update_stream = futures_glib::Interval::new(Duration::from_secs(3));
         relm.connect_exec_ignore_err(update_stream, Msg::Update);
@@ -137,11 +133,10 @@ impl Widget for Win {
     }
 
     fn view(_: &Relm<Self>, model: Self::Model) -> Self {
-        let key = env::var("GITTER_API_TOKEN").expect("Needs GITTER_API_TOKEN env var");
-        let api = Gitter::new(key).unwrap();
+        let token = env::var("GITTER_API_TOKEN").expect("Needs GITTER_API_TOKEN env var");
+        let api = Gitter::new(token).unwrap();
 
-        let window: gtk::ApplicationWindow = model.builder.get_object("window").unwrap();
-
+        let window = model.gtk_app.clone();
         window.show_all();
 
         Win { api, model, window }

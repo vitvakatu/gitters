@@ -1,17 +1,22 @@
+extern crate futures_glib;
+extern crate gitter;
 extern crate gtk;
 #[macro_use]
 extern crate relm;
 #[macro_use]
 extern crate relm_derive;
-extern crate futures_glib;
-extern crate gitter;
 
 use relm::Widget;
 
-mod msg;
-mod model;
-mod win;
+mod core;
 
 fn main() {
-    win::Win::run(()).unwrap();
+    core::win::Win::run(()).unwrap();
 }
+
+// TODO: next features with css.
+// fn style() {
+//     let css = gtk::CssProvider::new();
+//     css.load_from_resource("resources/style.css");
+//     gtk::StyleContext::add_provider_for_screen(&gdk::Screen::get_default().unwrap(), &css, 600);
+// }
