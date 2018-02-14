@@ -1,8 +1,8 @@
 use gtk;
-use gtk::{EntryExt, ListBoxExt, WidgetExt};
+use gtk::{EntryExt, ListBoxExt, StackExt, WidgetExt};
 use relm::Relm;
 use core::win::Win;
-use core::msg::Msg;
+use core::msg::{AppState, Msg};
 
 use std::collections::HashMap;
 
@@ -57,5 +57,19 @@ impl Model {
             current_room: String::new(),
             rooms: HashMap::new(),
         }
+    }
+
+    pub fn set_state(&self, app_state: AppState) {
+        // Application state
+        let widget_name = match app_state {
+            AppState::Chat => "chat",
+            AppState::Directory => "directory",
+            AppState::Loading => "loading",
+        };
+
+        self.builder
+            .get_object::<gtk::Stack>("main_content_stack")
+            .expect("Can't find main_content_stack in UI.")
+            .set_visible_child_name(widget_name);
     }
 }

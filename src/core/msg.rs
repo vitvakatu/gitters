@@ -9,13 +9,10 @@ pub enum Msg {
     Quit,
 }
 
-#[derive(Msg)]
 #[repr(u8)]
+#[derive(Clone, Copy)]
 pub enum AppState {
     Chat,
     Directory,
     Loading,
-    Room,
-    NoRoom,
-    Connect,
 }
