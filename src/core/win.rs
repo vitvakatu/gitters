@@ -7,7 +7,7 @@ use relm::{Relm, Widget};
 use std::time::Duration;
 use std::env;
 
-use core::msg::{Msg, AppState};
+use core::msg::{AppState, Msg};
 use core::model::Model;
 use futures_glib;
 
