@@ -7,7 +7,7 @@ use relm::{Relm, Widget};
 use std::time::Duration;
 use std::env;
 
-use core::msg::Msg;
+use core::msg::{AppState, Msg};
 use core::model::Model;
 use futures_glib;
 
@@ -50,6 +50,7 @@ impl Win {
             self.model.rooms.insert(row, room.id);
         }
         self.model.room_list_box.show_all();
+        self.model.set_state(AppState::Chat);
 
         for message in self.model.messages_box.get_children() {
             self.model.messages_box.remove(&message);
@@ -75,6 +76,7 @@ impl Win {
             }
             self.model.messages_box.show_all();
         } else {
+            // self.model.set_state(AppState::Loading);
             println!("Could not get messages");
         }
     }
